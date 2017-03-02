@@ -1,0 +1,93 @@
+{% load staticfiles %}
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script> 
+<!-- Bootstrap v3.0.3 -->
+<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
+<section class="container" id="Other" style="margin-bottom: 15px; padding: 10px;">
+<div class="row col-xs-12 col-md-12"><!-- Instructions -->
+<div class="panel panel-primary">
+<div class="panel-heading" style="color: rgb(51, 51, 51); font-family: Verdana, Geneva, sans-serif; font-size: 0.9em;"><strong>Instructions</strong></div>
+
+<div class="panel-body">
+<div class="adn ads" style="border-left-width: 1px; border-left-style: solid; border-left-color: transparent; padding-bottom: 20px; padding-left: 8px;">
+<div class="gs" style="margin-left: 44px;">
+<div class="ii gt m146f7f8a1e78c825 adP adO" id=":nc" style="direction: ltr; margin: 5px 15px 0px 0px; padding-bottom: 5px; position: relative; z-index: 0;">
+<div class="a3s" id=":nb" style="overflow: hidden;">
+<div dir="ltr">
+<p style=""><font color="#000000" face="Times" size="6"><span style="line-height: normal;">
+        Please <strong>translate</strong> this Chinese character <strong>to
+            {{ flash_card.response_type }}.</strong></span></font></p>
+
+<p style=""><span style="color: inherit; font-family: 'Helvetica Neue',
+    Helvetica, Arial, sans-serif; font-size: 18px; line-height: 1.1;">
+    Please do not look the characters up on the internet. You will see each
+    character multiple times and after each attempt you will be given the
+    correct answer. If you do not know the answer, or cannot remember, then
+    submit without entering an answer.
+</span><span style="color: inherit; font-family: Verdana, Geneva, sans-serif; font-size: 0.9em; line-height: 1.6em;">&nbsp;</span></p>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<section>
+<div style="margin: auto; width: 80%; text-align:center; border-style:solid;
+    border-width:3px;">
+    <span style="font-size: 150px"><strong>{{ flash_card.stimulus }}</strong></span>
+</div>
+</section>
+
+<!-- End Content Body --></div>
+</section>
+<div id="correct" style="color: green; text-align: center"><font face="Times"
+        size="6">Correct, (your response was "{{ flash_card.response }}")</font></div>
+<div id="incorrect" style="color:red; text-align: center"><font face="Times"
+        size="6">Incorrect, the right response is "{{ flash_card.response }}"</font></div>
+
+<div id="input_fields" style="text-align:center; width: 100%; padding: 10px;">
+    Enter your <strong>{{ flash_card.response_type }}</strong> translation: 
+        <input id="user_response" style="width:
+        250px; height: 30px"></input>
+        <br/> <br/>
+        <button id="submit" style="width:
+            100px; height: 50px">Submit Answer</button>
+    <br/><br/>
+    # of flash card attempts remaining: {{ remaining }}
+</div>
+<!-- close container -->
+<style type="text/css">fieldset {
+    padding: 10px;
+    background:#fbfbfb;
+    border-radius:5px;
+    margin-bottom:5px;
+}
+</style>
+
+<script>
+    $(function(){
+        $('#correct').hide();
+        $('#incorrect').hide();
+
+        $('#submit').click(function(){
+            $('#input_fields').hide()
+            user_resp = $('#user_response').val()
+            if ("{{ flash_card.response }}" == user_resp){
+                $('#correct').show();
+            }
+            else{
+                $('#incorrect').show();
+            }
+            setTimeout(function(){
+                //alert("hi")
+                window.location = "attempt/{{ flash_card.id }}/" +
+                    encodeURIComponent(user_resp);
+            }, 3000);
+        });
+    });
+
+</script>
+
+
