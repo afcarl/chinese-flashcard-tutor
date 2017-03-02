@@ -15,7 +15,8 @@ def export(request):
     response['Content-Disposition'] = 'attachment; filename="flash_cards.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['ip_address', 'user_hash', 'stimulus', 'true_response', 'user_response'])
+    writer.writerow(['ip_address', 'user_hash', 'stimulus', 'true_response',
+                     'user_response'])
 
     pred = UserAttempt.objects.order_by('time')
     for p in pred:
@@ -40,9 +41,9 @@ def index(request):
         return HttpResponse(template.render(context))
 
     if len(UserAttempt.objects.filter(user=user)) > 0:
-        last_card = UserAttempt.objects.filter(user=user).order_by('-time')[0]
-        print(last_card.flash_card.response)
-        card = FlashCard.objects.exclude(id=last_card.id).order_by('?')[0]
+        last_cards = [a.flash_card.id for a in
+                      UserAttempt.objects.filter(user=user).order_by('-time')[:2]]
+        card = FlashCard.objects.exclude(id__in=last_cards).order_by('?')[0]
     else:
         card = FlashCard.objects.order_by('?')[0]
 
@@ -60,7 +61,8 @@ def attempt(request, flash_card_id, value):
         user = "Unknown"
 
     flash_card = FlashCard.objects.get(id__exact=flash_card_id)
-    attempt = UserAttempt(user=user, flash_card=flash_card, user_response=value)
+    attempt = UserAttempt(user=user, flash_card=flash_card,
+                          user_response=value)
     attempt.save()
 
     return HttpResponseRedirect(reverse('index'))

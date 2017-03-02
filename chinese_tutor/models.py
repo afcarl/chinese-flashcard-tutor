@@ -15,3 +15,7 @@ class UserAttempt(models.Model):
     flash_card = models.ForeignKey(FlashCard, related_name="flash_card")
     user_response = models.CharField(max_length=200)
     time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str((self.user, self.flash_card.stimulus, self.user_response,
+                    self.user_response == self.flash_card.response))
