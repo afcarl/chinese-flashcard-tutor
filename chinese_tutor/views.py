@@ -42,7 +42,7 @@ def index(request):
 
     if len(UserAttempt.objects.filter(user=user)) > 0:
         last_cards = [a.flash_card.id for a in
-                      UserAttempt.objects.filter(user=user).order_by('-time')[:2]]
+                      UserAttempt.objects.filter(user=user).order_by('-time')[:1]]
         card = FlashCard.objects.exclude(id__in=last_cards).order_by('?')[0]
     else:
         card = FlashCard.objects.order_by('?')[0]
