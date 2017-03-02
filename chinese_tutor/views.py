@@ -15,11 +15,12 @@ def export(request):
     response['Content-Disposition'] = 'attachment; filename="flash_cards.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['name', 'stimulus', 'true_response', 'user_response'])
+    writer.writerow(['ip_address', 'user_hash', 'stimulus', 'true_response', 'user_response'])
 
     pred = UserAttempt.objects.order_by('time')
     for p in pred:
-        writer.writerow([p.user, p.flash_card.stimulus, p.flash_card.response,
+        writer.writerow([p.user, hashlib.md5(p.user.encode()).hexdigest()[0:6],
+                         p.flash_card.stimulus, p.flash_card.response,
                          p.user_response])
     return response
 
@@ -40,6 +41,7 @@ def index(request):
 
     if len(UserAttempt.objects.filter(user=user)) > 0:
         last_card = UserAttempt.objects.filter(user=user).order_by('-time')[0]
+        print(last_card.flash_card.response)
         card = FlashCard.objects.exclude(id=last_card.id).order_by('?')[0]
     else:
         card = FlashCard.objects.order_by('?')[0]
